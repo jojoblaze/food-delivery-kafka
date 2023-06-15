@@ -34,9 +34,9 @@ kubectl create -f kafka1-service.yaml --context kind-food-delivery-cluster
 To enter Kafka container
 
 ```
-kubectl --context kind-<cluster name> exec kafka1-<pod-id>  -it -- /bin/sh
+kubectl --context kind-<cluster name> exec kafka-broker-<pod-id>  -it -- /bin/sh
 
-kubectl --context kind-food-delivery-cluster exec kafka1-<pod-id>  -it -- /bin/sh
+kubectl --context kind-food-delivery-cluster exec kafka-broker-<pod-id> -it -- /bin/sh
 ```
 
 
@@ -45,7 +45,24 @@ kubectl --context kind-food-delivery-cluster exec kafka1-<pod-id>  -it -- /bin/s
 ### Create topic
 
 ```
-kafka-topics --create --topic <topic name> --bootstrap-server localhost:9092
+kafka-topics.sh --create --topic <topic name> --bootstrap-server localhost:9092
+
+kafka-topics.sh --create --topic merchants.order-placed --bootstrap-server localhost:9092
 ```
 
 
+### Read topic
+
+```
+kafka-console-consumer.sh --topic <topic name> --from-beginning --bootstrap-server localhost:9092
+
+kafka-console-consumer.sh --topic merchants.order-placed --from-beginning --bootstrap-server localhost:9092
+
+```
+
+
+### List topics
+
+```
+kafka-topics.sh --list --bootstrap-server localhost:9092
+```

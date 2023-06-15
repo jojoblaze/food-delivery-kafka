@@ -1,27 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: zookeeper-service
+  name: zookeeper-service
+  # namespace: kafka
+spec:
+  type: NodePort
+  ports:
+    - name: zookeeper-port
+      port: 2181
+      nodePort: 30181
+      targetPort: 2181
+  selector:
+    app: zookeeper
+# status:
+#   loadBalancer: {}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f zk-single-kafka-single.yml
-    kompose.version: 1.26.0 (40646f47)
-  creationTimestamp: null
   labels:
-    io.kompose.service: zoo1
-  name: zoo1
+    app: zookeeper
+  name: zookeeper
+  # namespace: kafka
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: zoo1
+      app: zookeeper
   strategy: {}
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -f zk-single-kafka-single.yml
-        kompose.version: 1.26.0 (40646f47)
-      creationTimestamp: null
       labels:
-        io.kompose.service: zoo1
+        app: zookeeper
     spec:
       containers:
         - env:
@@ -31,8 +43,9 @@ spec:
               value: zoo1:2888:3888
             - name: ZOOKEEPER_SERVER_ID
               value: "1"
-          image: confluentinc/cp-zookeeper:7.3.2
-          name: zoo1
+          image: wurstmeister/zookeeper
+          imagePullPolicy: IfNotPresent
+          name: zookeeper
           ports:
             - containerPort: 2181
           resources: {}
